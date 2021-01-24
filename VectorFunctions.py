@@ -2,6 +2,8 @@ import numpy as np
 from numpy import conj
 from math import sqrt
 
+from numpy.core.fromnumeric import _argsort_dispatcher
+
 class Vector():
     def __init__(self, vector, mult_factor):
         self.vector = np.array([vector])
@@ -41,19 +43,39 @@ def VectorsOrthogonal(input_vector_user1: Vector, input_vector_user2: Vector):
 def VectorsSpan(*args):
     #check whether all of the vectors are the same length and the number of vectors is equal to that length,
     #otherwise throw exceptions (different ones for each one of the cases).
-    VectorMatrix = [[arg in args] for rows in range(len(args))]
-    #put all of the given vectors inside a matrix
-
-
-# def SpanSpace():
+    NumOfVectors = len(args)
+    MatrixOfVectors = np.empty((NumOfVectors,NumOfVectors),dtype = np.complex)
+    for i,item in enumerate(args):
+        if len(item.vector[0,:])!= NumOfVectors:
+            raise ValueError('One or more of the vectors is the wrong length')
+        else:
+            #MatrixOfVectors = np.array([item.vector[0,:]])
+            MatrixOfVectors[i,:] = item.vector[0,:]
+            #append a row to a matrix of vectors
+    #now check whether any of the vectors are multiples of one another.
+    for firstRow in range(NumOfVectors):
+        for secondRow in range(firstRow+1,NumOfVectors):
+            if np.cross(MatrixOfVectors[firstRow,:],MatrixOfVectors[secondRow,:]) == 0:
+                return False
+    return True
 
 # Checking the functions
 
-vector1 = Vector([1, 1], 1/sqrt(2))
-print(VectorNormalized(vector1))
-try:
-    vector11 = Vector([1, 1], 1 / sqrt(2))
-    vector22 = Vector([1, 1, 2], 1 / sqrt(2))
-    print(VectorsOrthogonal(vector11, vector22))
-except ValueError as V:
-    print(f'There was value error and its message is {V}')
+# vector1 = Vector([1, 1], 1/sqrt(2))
+# print(VectorNormalized(vector1))
+# try:
+#     vector11 = Vector([1, 1], 1 / sqrt(2))
+#     vector22 = Vector([1, 1, 2], 1 / sqrt(2))
+#     print(VectorsOrthogonal(vector11, vector22))
+# except ValueError as V:
+#     print(f'There was value error and its message is {V}')
+
+vector11 = Vector([1,1],1/sqrt(2))
+vector22 = Vector([1,1],1/sqrt(2))
+# try:
+#     VectorsSpan(vector11,vector22)
+# except ValueError as V:
+#     print(f'There was ValueError with the message {V}')
+
+DoTheySpan = VectorsSpan(vector11,vector22)
+print(DoTheySpan)
