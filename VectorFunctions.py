@@ -4,16 +4,17 @@ from math import sqrt
 
 class Vector():
     def __init__(self, vector, mult_factor):
-        self.vector = vector
+        self.vector = np.array([vector])
         self.factor = mult_factor
 
 
 def VectorNormalized(input_vector_user: Vector):
     # checks whether a vector is normalized
     # returns 1 if normalized, and normalization constant otherwise
-    input_vector = [x * input_vector_user.factor for x in input_vector_user.vector]
+    input_vector = input_vector_user.vector * input_vector_user.factor
     # multiplying the vector and the constant factor and putting it in input_vector
-    normalization = sum([x * conj(x) for x in input_vector])
+    input_vector_conj = np.transpose(np.conj(input_vector))
+    normalization = np.sum(input_vector.dot(input_vector_conj))
     try:
         return 1 / sqrt(normalization)
     except ZeroDivisionError:
@@ -35,6 +36,7 @@ def VectorsOrthogonal(input_vector_user1: Vector, input_vector_user2: Vector):
         else:
             return False
 
+#STILL WORK IN PROGRESS
 def VectorsSpan(*args):
     #check whether all of the vectors are the same length and the number of vectors is equal to that length,
     #otherwise throw exceptions (different ones for each one of the cases).
@@ -46,9 +48,9 @@ def VectorsSpan(*args):
 
 # Checking the functions
 
-vector1 = Vector([1, 1], 1 / sqrt(2))
+vector1 = Vector([1, 1], 1/sqrt(2))
 print(VectorNormalized(vector1))
 
 vector11 = Vector([1, 1, 3], 1 / sqrt(2))
 vector22 = Vector([1, -1], 1 / sqrt(2))
-print(VectorsOrthogonal(vector11, vector22))
+#print(VectorsOrthogonal(vector11, vector22))
