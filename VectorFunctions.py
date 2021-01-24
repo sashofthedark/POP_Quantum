@@ -26,11 +26,12 @@ def VectorsOrthogonal(input_vector_user1: Vector, input_vector_user2: Vector):
     # currently also returns False if the vectors are not the same length
     v1 = input_vector_user1.vector
     v2 = input_vector_user2.vector
-    if len(v1) != len(v2):
+    v2_conj = np.conj(v2)
+    if len(v1[0,:]) != len(v2[0,:]):
         raise ValueError(f'Vectors are not the same length: length of first vector is {len(v1)}'
                          f'and length of second vectors is {len(v2)}')
     else:
-        multiplication = sum([a * conj(b) for a, b in zip(v1, v2)])
+        multiplication = np.sum(v1.dot(np.transpose(v2_conj)))
         if abs(multiplication) < 1e-10:
             return True
         else:
@@ -50,7 +51,9 @@ def VectorsSpan(*args):
 
 vector1 = Vector([1, 1], 1/sqrt(2))
 print(VectorNormalized(vector1))
-
-vector11 = Vector([1, 1, 3], 1 / sqrt(2))
-vector22 = Vector([1, -1], 1 / sqrt(2))
-#print(VectorsOrthogonal(vector11, vector22))
+try:
+    vector11 = Vector([1, 1], 1 / sqrt(2))
+    vector22 = Vector([1, 1, 2], 1 / sqrt(2))
+    print(VectorsOrthogonal(vector11, vector22))
+except ValueError as V:
+    print(f'There was value error and its message is {V}')
