@@ -6,7 +6,14 @@ from numpy.core.fromnumeric import _argsort_dispatcher
 
 class Vector():
     def __init__(self, vector, mult_factor):
-        self.vector = np.array([vector])
+        self.vector = vector
+        #this should already be a numpy array
+        self.factor = mult_factor
+
+class Matrix():
+    def __init__(self,matrix,mult_factor):
+        #the matrix should be already a numpy array
+        self.matrix = matrix
         self.factor = mult_factor
 
 
@@ -59,23 +66,39 @@ def VectorsSpan(*args):
                 return False
     return True
 
+def IsHermitian(InputMatrix: Matrix):
+    #checks whether the matrix is hermitian
+    if len(InputMatrix.matrix[0,:]) != len(InputMatrix.matrix[:,0]):
+        return False
+        #if the matrix is not square, it is not Hermitian, and no further calculation is needed
+    MatrixDagger = np.conj(np.transpose(InputMatrix.matrix))
+    if  np.any(MatrixDagger - InputMatrix.matrix):
+        return False
+    else:
+        return True
+
 # Checking the functions
 
-# vector1 = Vector([1, 1], 1/sqrt(2))
+# vector1 = Vector(np.array([[1, 1]]), 1/sqrt(2))
 # print(VectorNormalized(vector1))
 # try:
-#     vector11 = Vector([1, 1], 1 / sqrt(2))
-#     vector22 = Vector([1, 1, 2], 1 / sqrt(2))
+#     vector11 = Vector(np.array([[1, 1]]), 1 / sqrt(2))
+#     vector22 = Vector(np.array([[1, 1, 2]]), 1 / sqrt(2))
 #     print(VectorsOrthogonal(vector11, vector22))
 # except ValueError as V:
 #     print(f'There was value error and its message is {V}')
 
-vector11 = Vector([1,1],1/sqrt(2))
-vector22 = Vector([1,1],1/sqrt(2))
+# vector11 = Vector(np.array([[1, 1]]),1/sqrt(2))
+# vector22 = Vector(np.array([[1, 1]]),1/sqrt(2))
 # try:
 #     VectorsSpan(vector11,vector22)
 # except ValueError as V:
 #     print(f'There was ValueError with the message {V}')
 
-DoTheySpan = VectorsSpan(vector11,vector22)
-print(DoTheySpan)
+# DoTheySpan = VectorsSpan(vector11,vector22)
+# print(DoTheySpan)
+
+HermMatrix = np.array([[2,1+1j,2-1j],[1-1j,1,1j],[2+1j,-1j,1]])
+NonHermMatrix = np.array([[1,2],[3,400]]) 
+print(f'For Hermitian Matrix we get {IsHermitian(Matrix(HermMatrix,1))}')
+print(f'For Non Hermitian Matrix we get {IsHermitian(Matrix(NonHermMatrix,1))}')
