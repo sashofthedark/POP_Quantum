@@ -77,11 +77,22 @@ def IsHermitian(InputMatrix: Matrix):
     else:
         return True
 
+def IsDensityMatrix(IsPure):
+    #a decorator that checks whether the matrix is a density matrix or not
+    def Inside(InputMatrix:Matrix):
+        MatrixToCheck = InputMatrix.factor * InputMatrix.matrix
+        if np.trace(MatrixToCheck) != 1:
+            return
+            #this is not a valid density matrix
+        return IsPure(InputMatrix)
+    return Inside
+
+@IsDensityMatrix
 def IsPure(InputMatrix:Matrix):
     #checks whether the density matrix is pure or mixed
-    #first, lets check it's a density matrix at all! - I will write a decorator for that
-    SquaredMatrix = InputMatrix.matrix.dot(InputMatrix.matrix)
-    if np.trace(SquaredMatrix) == np.trace(InputMatrix.matrix):
+    MatrixToCheck = InputMatrix.factor * InputMatrix.matrix
+    SquaredMatrix =  MatrixToCheck.dot(MatrixToCheck)
+    if np.trace(SquaredMatrix) == np.trace(MatrixToCheck):
         return True
     else:
         return False
@@ -107,7 +118,16 @@ def IsPure(InputMatrix:Matrix):
 # DoTheySpan = VectorsSpan(vector11,vector22)
 # print(DoTheySpan)
 
-HermMatrix = np.array([[2,1+1j,2-1j],[1-1j,1,1j],[2+1j,-1j,1]])
-NonHermMatrix = np.array([[1,2],[3,400]]) 
-print(f'For Hermitian Matrix we get {IsHermitian(Matrix(HermMatrix,1))}')
-print(f'For Non Hermitian Matrix we get {IsHermitian(Matrix(NonHermMatrix,1))}')
+# HermMatrix = np.array([[2,1+1j,2-1j],[1-1j,1,1j],[2+1j,-1j,1]])
+# NonHermMatrix = np.array([[1,2],[3,400]]) 
+# print(f'For Hermitian Matrix we get {IsHermitian(Matrix(HermMatrix,1))}')
+# print(f'For Non Hermitian Matrix we get {IsHermitian(Matrix(NonHermMatrix,1))}')
+
+DensityMatrix = Matrix(np.array([[1,1],[1,1]]),0.5)
+#maximally mixed state, but a valid density matrix
+
+IsPureMatrix = IsPure(DensityMatrix)
+if IsPureMatrix == None:
+    print('This is not a density matrix')
+else:
+    print(IsPureMatrix)
