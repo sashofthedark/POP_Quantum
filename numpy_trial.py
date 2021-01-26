@@ -25,6 +25,14 @@ from numpy.testing._private.utils import jiffies
 # for row in A:
 #     print(row)
 
-Matrix1 = np.array([[1,2,3],[2,4,5]])
-print(len(Matrix1[0,:]))
-print(len(Matrix1[:,0]))
+# Matrix1 = np.array([[1,2,3],[2,4,5]])
+# print(len(Matrix1[0,:]))
+# print(len(Matrix1[:,0]))
+
+matrix1 = np.array([[1,2],[2,1]])
+#print(matrix1)
+matrix2 = np.array([[1,0],[1,3]])
+#print(matrix2)
+multiplied = matrix1.dot(matrix2)
+print(multiplied)
+print(np.trace(multiplied))
