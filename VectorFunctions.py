@@ -77,6 +77,15 @@ def IsHermitian(InputMatrix: Matrix):
     else:
         return True
 
+def IsPure(InputMatrix:Matrix):
+    #checks whether the density matrix is pure or mixed
+    #first, lets check it's a density matrix at all! - I will write a decorator for that
+    SquaredMatrix = InputMatrix.matrix.dot(InputMatrix.matrix)
+    if np.trace(SquaredMatrix) == np.trace(InputMatrix.matrix):
+        return True
+    else:
+        return False
+
 # Checking the functions
 
 # vector1 = Vector(np.array([[1, 1]]), 1/sqrt(2))
